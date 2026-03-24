@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro Clínico – Datos del Paciente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ── Reset & Base ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --navy: #0B2545;
+            --navy-mid: #13315C;
+            --blue: #1B4F8A;
+            --blue-light: #5B9BD5;
+            --blue-accent: #A3CFFA;
+            --blue-pale: #E8F1FB;
+            --white: #FFFFFF;
+            --gray-50: #F8FAFB;
+            --gray-100: #F1F4F7;
+            --gray-200: #E2E7ED;
+            --gray-300: #CCD4DD;
+            --gray-500: #7A8A9E;
+            --gray-700: #3D4F63;
+            --shadow-sm: 0 1px 3px rgba(11, 37, 69, .06);
+            --shadow-md: 0 4px 16px rgba(11, 37, 69, .08);
+            --shadow-lg: 0 8px 32px rgba(11, 37, 69, .12);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: .22s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #E8F1FB 0%, #d0e3f5 50%, #c4d8ed 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: var(--gray-700);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Tablet frame ── */
+        .tablet {
+            width: 100%;
+            max-width: 1440px;
+            background: var(--white);
+            border-radius: 28px;
+            box-shadow:
+                var(--shadow-lg),
+                0 0 0 1px rgba(11, 37, 69, .04),
+                inset 0 1px 0 rgba(255, 255, 255, .8);
+            overflow: hidden;
+            animation: fadeIn .5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+            padding: 16px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(91, 155, 213, .15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 1;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(255, 255, 255, .12);
+            border: 1.5px solid rgba(255, 255, 255, .2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--white);
+        }
+
+        .header h1 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: -.02em;
+        }
+
+        .header h1 span {
+            font-weight: 300;
+            opacity: .7;
+            margin-left: 8px;
+            font-size: .85rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            z-index: 1;
+        }
+
+        .header-date {
+            font-size: .8rem;
+            color: rgba(255, 255, 255, .6);
+            font-weight: 400;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ADE80;
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(74, 222, 128, .5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .5;
+            }
+        }
+
+        /* ── Patient ID Bar ── */
+        .patient-bar {
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 12px 36px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .patient-bar label {
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            white-space: nowrap;
+        }
+
+        .patient-id-input {
+            flex: 0 1 280px;
+            height: 42px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            padding: 0 14px;
+            font-family: inherit;
+            font-size: .9rem;
+            color: var(--navy);
+            background: var(--white);
+            transition: border-color var(--transition), box-shadow var(--transition);
+            outline: none;
+        }
+
+        .patient-id-input::placeholder {
+            color: var(--gray-300);
+        }
+
+        .patient-id-input:focus {
+            border-color: var(--blue-light);
+            box-shadow: 0 0 0 3px rgba(91, 155, 213, .15);
+        }
+
+        .patient-name-display {
+            font-size: .85rem;
+            color: var(--gray-500);
+            font-style: italic;
+        }
+
+        /* ── Main Content ── */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            padding: 0;
+        }
+
+        /* ── Section shared ── */
+        .section {
+            padding: 18px 36px 20px;
+        }
+
+        .section:first-child {
+            border-right: 1px solid var(--gray-200);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .section-title .icon-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title .icon-badge svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .section-title h2 {
+            font-size: .82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+        }
+
+        /* clinical section */
+        .clinical .icon-badge {
+            background: var(--blue-pale);
+        }
+
+        .clinical .icon-badge svg {
+            fill: var(--blue);
+        }
+
+        .clinical h2 {
+            color: var(--navy);
+        }
+
+        /* analytics section */
+        .analytics .icon-badge {
+            background: #FFF4E6;
+        }
+
+        .analytics .icon-badge svg {
+            fill: #D97706;
+        }
+
+        .analytics h2 {
+            color: var(--navy);
+        }
+
+        /* ── Form rows ── */
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 7px 14px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+        }
+
+        .form-row:hover {
+            border-color: var(--blue-accent);
+            background: var(--blue-pale);
+        }
+
+        .form-row:focus-within {
+            border-color: var(--blue-light);
+            box-shadow: 0 0 0 3px rgba(91, 155, 213, .12);
+            background: var(--white);
+        }
+
+        .form-row .row-label {
+            flex: 1;
+            font-size: .82rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            line-height: 1.3;
+        }
+
+        .form-row .row-label .unit {
+            font-weight: 400;
+            color: var(--gray-500);
+            font-size: .75rem;
+        }
+
+        .form-row input[type="number"],
+        .form-row input[type="text"],
+        .form-row select {
+            width: 110px;
+            height: 32px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 6px;
+            padding: 0 10px;
+            font-family: inherit;
+            font-size: .85rem;
+            font-weight: 500;
+            color: var(--navy);
+            background: var(--gray-50);
+            text-align: center;
+            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+            outline: none;
+            -moz-appearance: textfield;
+        }
+
+        .form-row input[type="number"]::-webkit-inner-spin-button,
+        .form-row input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .form-row input:focus,
+        .form-row select:focus {
+            border-color: var(--blue-light);
+            background: var(--white);
+            box-shadow: 0 0 0 2px rgba(91, 155, 213, .12);
+        }
+
+        .form-row select {
+            width: 130px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A8A9E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+            text-align: left;
+            padding-left: 12px;
+        }
+
+        /* Valoración Inicial */
+        .valoracion-row {
+            margin-top: 6px;
+        }
+
+        .valoracion-row textarea {
+            width: 100%;
+            height: 50px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            padding: 8px 14px;
+            font-family: inherit;
+            font-size: .82rem;
+            color: var(--navy);
+            background: var(--gray-50);
+            resize: vertical;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            outline: none;
+            line-height: 1.4;
+        }
+
+        .valoracion-row textarea:focus {
+            border-color: var(--blue-light);
+            box-shadow: 0 0 0 3px rgba(91, 155, 213, .12);
+            background: var(--white);
+        }
+
+        .valoracion-row textarea::placeholder {
+            color: var(--gray-300);
+        }
+
+        .valoracion-label {
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .valoracion-label svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--blue);
+        }
+
+        /* ── Analytical checkboxes ── */
+        .check-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+            user-select: none;
+        }
+
+        .check-row:hover {
+            border-color: var(--blue-accent);
+            background: var(--blue-pale);
+        }
+
+        .check-row.checked {
+            border-color: var(--blue-light);
+            background: linear-gradient(135deg, #EBF4FF 0%, #E0EFFC 100%);
+            box-shadow: 0 0 0 2px rgba(91, 155, 213, .1);
+        }
+
+        /* Custom checkbox */
+        .custom-check {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--gray-300);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all var(--transition);
+            background: var(--white);
+        }
+
+        .check-row.checked .custom-check {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+            border-color: var(--blue);
+        }
+
+        .custom-check svg {
+            width: 13px;
+            height: 13px;
+            fill: none;
+            stroke: white;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0;
+            transform: scale(.5);
+            transition: all var(--transition);
+        }
+
+        .check-row.checked .custom-check svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .check-row input[type="checkbox"] {
+            display: none;
+        }
+
+        .check-label {
+            font-size: .82rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            line-height: 1.3;
+        }
+
+        .check-label .threshold {
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        /* ── Footer / Actions ── */
+        .footer {
+            border-top: 1px solid var(--gray-200);
+            padding: 14px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--gray-50);
+        }
+
+        .footer-info {
+            font-size: .75rem;
+            color: var(--gray-500);
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            height: 38px;
+            padding: 0 24px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: .82rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition);
+            border: none;
+            outline: none;
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 1.5px solid var(--gray-200);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gray-300);
+            background: var(--gray-100);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: var(--white);
+            box-shadow: 0 2px 8px rgba(11, 37, 69, .2);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px rgba(11, 37, 69, .3);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .tablet {
+                border-radius: 18px;
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .section:first-child {
+                border-right: none;
+                border-bottom: 1px solid var(--gray-200);
+            }
+
+            .header {
+                padding: 18px 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .patient-bar {
+                padding: 14px 20px;
+                flex-wrap: wrap;
+            }
+
+            .footer {
+                padding: 14px 20px;
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+
+        /* ── Tooltip styling ── */
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper .range-hint {
+            display: none;
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--navy);
+            color: var(--white);
+            font-size: .7rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .input-wrapper:focus-within .range-hint {
+            display: block;
+            animation: tooltipIn .2s ease;
+        }
+
+        @keyframes tooltipIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* ── Counter badge ── */
+        .counter-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 12px;
+            background: var(--blue-accent);
+            color: var(--navy);
+            font-size: .7rem;
+            font-weight: 700;
+            padding: 0 6px;
+            margin-left: 8px;
+            transition: all var(--transition);
+        }
+
+        .counter-badge.active {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+            color: var(--white);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="tablet">
+        <!-- ═══ Header ═══ -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                    </svg>
+                </div>
+                <h1>Registro Clínico<span>Sistema de Valoración</span></h1>
+            </div>
+            <div class="header-right">
+                <span class="header-date" id="currentDate"></span>
+                <div class="status-dot"></div>
+            </div>
+        </div>
+
+        <!-- ═══ Patient ID Bar ═══ -->
+        <div class="patient-bar">
+            <label for="patientId">
+                <svg style="width:14px;height:14px;fill:currentColor;vertical-align:middle;margin-right:4px"
+                    viewBox="0 0 24 24">
+                    <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+                ID Paciente
+            </label>
+            <input type="text" class="patient-id-input" id="patientId" placeholder="Ej: PAC-2026-00341"
+                autocomplete="off">
+            <span class="patient-name-display" id="patientNameDisplay">Introduzca el identificador del paciente</span>
+        </div>
+
+        <!-- ═══ Two-column content ═══ -->
+        <div class="content">
+
+            <!-- ── Left: Datos Clínicos ── -->
+            <div class="section clinical">
+                <div class="section-title">
+                    <div class="icon-badge">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" />
+                        </svg>
+                    </div>
+                    <h2>Datos Clínicos</h2>
+                </div>
+
+                <div class="form-grid">
+                    <!-- Sat O2 -->
+                    <div class="form-row">
+                        <span class="row-label">Sat. O₂ <span class="unit">(%)</span></span>
+                        <div class="input-wrapper">
+                            <span class="range-hint">70 – 100 %</span>
+                            <input type="number" id="satO2" min="0" max="100" placeholder="–">
+                        </div>
+                    </div>
+                    <!-- Frec Respiratoria -->
+                    <div class="form-row">
+                        <span class="row-label">Frec. Respiratoria <span class="unit">(rpm)</span></span>
+                        <div class="input-wrapper">
+                            <span class="range-hint">12 – 40 rpm</span>
+                            <input type="number" id="frecResp" min="0" max="80" placeholder="–">
+                        </div>
+                    </div>
+                    <!-- O2 Suplementario -->
+                    <div class="form-row">
+                        <span class="row-label">O₂ Suplementario</span>
+                        <select id="o2Suplementario">
+                            <option value="" selected disabled>Seleccionar</option>
+                            <option value="no">No</option>
+                            <option value="gn-1">GN 1 lpm</option>
+                            <option value="gn-2">GN 2 lpm</option>
+                            <option value="gn-3">GN 3 lpm</option>
+                            <option value="gn-4">GN 4 lpm</option>
+                            <option value="gn-5">GN 5 lpm</option>
+                            <option value="mascarilla-28">Mascarilla 28%</option>
+                            <option value="mascarilla-35">Mascarilla 35%</option>
+                            <option value="mascarilla-40">Mascarilla 40%</option>
+                            <option value="mascarilla-50">Mascarilla 50%</option>
+                            <option value="reservorio">Reservorio</option>
+                            <option value="vmni">VMNI</option>
+                            <option value="vmi">VMI</option>
+                            <option value="oaf">OAF</option>
+                        </select>
+                    </div>
+                    <!-- Frec Cardiaca -->
+                    <div class="form-row">
+                        <span class="row-label">Frec. Cardíaca <span class="unit">(pulso; lpm)</span></span>
+                        <div class="input-wrapper">
+                            <span class="range-hint">40 – 200 lpm</span>
+                            <input type="number" id="frecCardiaca" min="0" max="300" placeholder="–">
+                        </div>
+                    </div>
+                    <!-- Tensión Arterial -->
+                    <div class="form-row">
+                        <span class="row-label">Tensión Arterial TAS <span class="unit">(mmHg)</span></span>
+                        <div class="input-wrapper">
+                            <span class="range-hint">60 – 250 mmHg</span>
+                            <input type="number" id="tas" min="0" max="300" placeholder="–">
+                        </div>
+                    </div>
+                    <!-- Nivel Conciencia -->
+                    <div class="form-row">
+                        <span class="row-label">Nivel de Conciencia <span class="unit">(A-V-D-N-C)</span></span>
+                        <select id="nivelConciencia">
+                            <option value="" selected disabled>Seleccionar</option>
+                            <option value="A">A – Alerta</option>
+                            <option value="V">V – Verbal</option>
+                            <option value="D">D – Dolor</option>
+                            <option value="N">N – No responde</option>
+                            <option value="C">C – Confuso</option>
+                        </select>
+                    </div>
+                    <!-- Dolor -->
+                    <div class="form-row">
+                        <span class="row-label">Dolor <span class="unit">(EVA 0-10)</span></span>
+                        <div class="input-wrapper">
+                            <span class="range-hint">0 = sin dolor, 10 = máximo</span>
+                            <input type="number" id="dolor" min="0" max="10" placeholder="–">
+                        </div>
+                    </div>
+                    <!-- Temperatura -->
+                    <div class="form-row">
+                        <span class="row-label">Temperatura <span class="unit">(ºC)</span></span>
+                        <div class="input-wrapper">
+                            <span class="range-hint">34 – 42 ºC</span>
+                            <input type="number" id="temperatura" min="30" max="45" step="0.1" placeholder="–">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Valoración Inicial -->
+                <div class="valoracion-row" style="margin-top: 14px;">
+                    <div class="valoracion-label">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM6 20V4h5v7h7v9H6z" />
+                        </svg>
+                        Valoración Inicial
+                    </div>
+                    <textarea id="valoracionInicial"
+                        placeholder="Escriba aquí la valoración inicial del paciente…"></textarea>
+                </div>
+            </div>
+
+            <!-- ── Right: Datos Analíticos Recientes ── -->
+            <div class="section analytics">
+                <div class="section-title">
+                    <div class="icon-badge">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M7 2v11h3v9l7-12h-4l4-8z" />
+                        </svg>
+                    </div>
+                    <h2>Datos Analíticos Recientes</h2>
+                    <span class="counter-badge" id="counterBadge">0</span>
+                </div>
+
+                <div class="check-grid">
+                    <label class="check-row" onclick="toggleCheck(this)">
+                        <input type="checkbox" name="analitica" value="ph">
+                        <div class="custom-check">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <span class="check-label">pH <span class="threshold">&lt; 7,3</span></span>
+                    </label>
+                    <label class="check-row" onclick="toggleCheck(this)">
+                        <input type="checkbox" name="analitica" value="pco2">
+                        <div class="custom-check">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <span class="check-label">pCO₂ <span class="threshold">≥ 60 mmHg</span></span>
+                    </label>
+                    <label class="check-row" onclick="toggleCheck(this)">
+                        <input type="checkbox" name="analitica" value="lactato">
+                        <div class="custom-check">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <span class="check-label">Lactato <span class="threshold">&gt; 3 mmol/L</span></span>
+                    </label>
+                    <label class="check-row" onclick="toggleCheck(this)">
+                        <input type="checkbox" name="analitica" value="leucocitosis">
+                        <div class="custom-check">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <span class="check-label">Leucocitosis <span class="threshold">&gt; 20.000</span></span>
+                    </label>
+                    <label class="check-row" onclick="toggleCheck(this)">
+                        <input type="checkbox" name="analitica" value="pcr">
+                        <div class="custom-check">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <span class="check-label">PCR <span class="threshold">&gt; 300 mg/dL</span></span>
+                    </label>
+                    <label class="check-row" onclick="toggleCheck(this)">
+                        <input type="checkbox" name="analitica" value="troponina">
+                        <div class="custom-check">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <span class="check-label">Troponina T US <span class="threshold">&gt; 50 ng/mL</span></span>
+                    </label>
+                </div>
+
+                <!-- Visual separator -->
+                <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--gray-200);">
+                    <div class="valoracion-label" style="margin-bottom: 10px;">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M11 15h2v2h-2zm0-8h2v6h-2zm1-5C6.47 2 2 6.5 2 12a10 10 0 0020 0c0-5.5-4.47-10-10-10zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                        </svg>
+                        Resumen de Alertas
+                    </div>
+                    <div id="alertSummary" style="
+                    padding: 14px 16px;
+                    background: var(--gray-50);
+                    border: 1px solid var(--gray-200);
+                    border-radius: var(--radius-sm);
+                    font-size: .8rem;
+                    color: var(--gray-500);
+                    line-height: 1.6;
+                    min-height: 60px;
+                ">
+                        No se han marcado alteraciones analíticas.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Footer ═══ -->
+        <div class="footer">
+            <span class="footer-info">Los campos marcados constituyen criterios de alerta clínica</span>
+            <div class="footer-actions">
+                <a href="Protocolo_Sepsis.html" class="btn btn-secondary" style="text-decoration:none;">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                    </svg>
+                    Ir a Protocolo Sepsis
+                </a>
+                <button class="btn btn-secondary" onclick="clearForm()">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" />
+                    </svg>
+                    Limpiar
+                </button>
+                <button class="btn btn-primary" onclick="submitForm()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                    </svg>
+                    Guardar Registro
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Date display ──
+        const dateEl = document.getElementById('currentDate');
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        dateEl.textContent = now.toLocaleDateString('es-ES', options);
+
+        // ── Toggle Checkbox ──
+        function toggleCheck(row) {
+            const cb = row.querySelector('input[type="checkbox"]');
+            // Toggle is handled by label click, just update visual
+            setTimeout(() => {
+                row.classList.toggle('checked', cb.checked);
+                updateCounter();
+                updateAlertSummary();
+            }, 0);
+        }
+
+        // ── Counter Badge ──
+        function updateCounter() {
+            const checked = document.querySelectorAll('.check-row input:checked').length;
+            const badge = document.getElementById('counterBadge');
+            badge.textContent = checked;
+            badge.classList.toggle('active', checked > 0);
+        }
+
+        // ── Alert Summary ──
+        function updateAlertSummary() {
+            const checked = document.querySelectorAll('.check-row input:checked');
+            const summary = document.getElementById('alertSummary');
+
+            if (checked.length === 0) {
+                summary.textContent = 'No se han marcado alteraciones analíticas.';
+                summary.style.color = 'var(--gray-500)';
+                summary.style.borderColor = 'var(--gray-200)';
+                summary.style.background = 'var(--gray-50)';
+                return;
+            }
+
+            const items = Array.from(checked).map(cb => {
+                const label = cb.closest('.check-row').querySelector('.check-label').textContent.trim();
+                return '⚠ ' + label;
+            });
+
+            summary.innerHTML = '<strong style="color:var(--navy);display:block;margin-bottom:4px;">Alertas activas (' + checked.length + '):</strong>' + items.join('<br>');
+            summary.style.color = '#92400E';
+            summary.style.borderColor = '#FCD34D';
+            summary.style.background = '#FFFBEB';
+        }
+
+        // ── Clear Form ──
+        function clearForm() {
+            document.getElementById('patientId').value = '';
+            document.getElementById('patientNameDisplay').textContent = 'Introduzca el identificador del paciente';
+            document.querySelectorAll('.form-row input, .form-row select').forEach(el => {
+                if (el.type === 'number' || el.type === 'text') el.value = '';
+                if (el.tagName === 'SELECT') el.selectedIndex = 0;
+            });
+            document.getElementById('valoracionInicial').value = '';
+            document.querySelectorAll('.check-row').forEach(row => {
+                row.classList.remove('checked');
+                row.querySelector('input').checked = false;
+            });
+            updateCounter();
+            updateAlertSummary();
+        }
+
+        // ── Submit Form ──
+        function submitForm() {
+            const patientId = document.getElementById('patientId').value.trim();
+
+            if (!patientId) {
+                document.getElementById('patientId').focus();
+                document.getElementById('patientId').style.borderColor = '#EF4444';
+                setTimeout(() => {
+                    document.getElementById('patientId').style.borderColor = '';
+                }, 2000);
+                return;
+            }
+
+            const data = {
+                pacienteId: patientId,
+                datosClinicos: {
+                    satO2: document.getElementById('satO2').value,
+                    frecResp: document.getElementById('frecResp').value,
+                    o2Suplementario: document.getElementById('o2Suplementario').value,
+                    frecCardiaca: document.getElementById('frecCardiaca').value,
+                    tas: document.getElementById('tas').value,
+                    nivelConciencia: document.getElementById('nivelConciencia').value,
+                    dolor: document.getElementById('dolor').value,
+                    temperatura: document.getElementById('temperatura').value,
+                    valoracionInicial: document.getElementById('valoracionInicial').value,
+                },
+                datosAnaliticos: Array.from(document.querySelectorAll('.check-row input:checked')).map(cb => cb.value),
+                timestamp: new Date().toISOString()
+            };
+
+            console.log('Registro guardado:', data);
+
+            // Visual feedback
+            const btn = document.querySelector('.btn-primary');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> ¡Guardado!';
+            btn.style.background = 'linear-gradient(135deg, #059669, #10B981)';
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = '';
+            }, 2000);
+        }
+    </script>
+
+</body>
+
+</html>

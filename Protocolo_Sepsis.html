@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo Sepsis – Departamento de Urgencias</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --navy: #0B2545;
+            --navy-mid: #13315C;
+            --blue: #1B4F8A;
+            --blue-light: #5B9BD5;
+            --blue-accent: #A3CFFA;
+            --blue-pale: #E8F1FB;
+            --white: #FFFFFF;
+            --gray-50: #F8FAFB;
+            --gray-100: #F1F4F7;
+            --gray-200: #E2E7ED;
+            --gray-300: #CCD4DD;
+            --gray-500: #7A8A9E;
+            --gray-700: #3D4F63;
+            --red: #DC2626;
+            --red-pale: #FEF2F2;
+            --red-border: #FECACA;
+            --green: #059669;
+            --green-pale: #ECFDF5;
+            --green-border: #A7F3D0;
+            --amber: #D97706;
+            --amber-pale: #FFFBEB;
+            --amber-border: #FCD34D;
+            --shadow-lg: 0 8px 32px rgba(11, 37, 69, .12);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: .22s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #E8F1FB 0%, #d0e3f5 50%, #c4d8ed 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 24px;
+            color: var(--gray-700);
+            -webkit-font-smoothing: antialiased
+        }
+
+        .tablet {
+            width: 100%;
+            max-width: 1440px;
+            background: var(--white);
+            border-radius: 28px;
+            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(11, 37, 69, .04), inset 0 1px 0 rgba(255, 255, 255, .8);
+            overflow: hidden;
+            animation: fadeIn .5s ease-out;
+            margin: 0 auto
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--blue) 100%);
+            padding: 16px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -5%;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(91, 155, 213, .15) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            z-index: 1
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(255, 255, 255, .12);
+            border: 1.5px solid rgba(255, 255, 255, .2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px)
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--white)
+        }
+
+        .header h1 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: -.02em
+        }
+
+        .header h1 span {
+            font-weight: 300;
+            opacity: .7;
+            margin-left: 8px;
+            font-size: .85rem
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            z-index: 1
+        }
+
+        .header-date {
+            font-size: .8rem;
+            color: rgba(255, 255, 255, .6);
+            font-weight: 400
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ADE80;
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(74, 222, 128, .5);
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .5
+            }
+        }
+
+        /* Subtitle bar */
+        .subtitle-bar {
+            background: var(--red);
+            padding: 8px 36px;
+            text-align: center;
+            font-size: .78rem;
+            font-weight: 600;
+            color: var(--white);
+            letter-spacing: .03em;
+            text-transform: uppercase
+        }
+
+        /* Patient bar */
+        .patient-bar {
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 12px 36px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap
+        }
+
+        .patient-bar label {
+            font-size: .75rem;
+            font-weight: 600;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            white-space: nowrap
+        }
+
+        .patient-bar .field-group {
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .patient-bar input,
+        .patient-bar select {
+            height: 34px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 6px;
+            padding: 0 10px;
+            font-family: inherit;
+            font-size: .82rem;
+            color: var(--navy);
+            background: var(--white);
+            outline: none;
+            transition: border-color var(--transition), box-shadow var(--transition)
+        }
+
+        .patient-bar input:focus,
+        .patient-bar select:focus {
+            border-color: var(--blue-light);
+            box-shadow: 0 0 0 3px rgba(91, 155, 213, .15)
+        }
+
+        .patient-bar input::placeholder {
+            color: var(--gray-300)
+        }
+
+        .inp-id {
+            width: 160px
+        }
+
+        .inp-name {
+            width: 220px
+        }
+
+        .inp-sm {
+            width: 80px
+        }
+
+        .inp-date {
+            width: 130px
+        }
+
+        .inp-time {
+            width: 100px
+        }
+
+        .patient-bar select {
+            width: 110px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A8A9E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            padding-right: 24px
+        }
+
+        /* Content area */
+        .content {
+            padding: 0 36px 20px
+        }
+
+        /* Step section */
+        .step-section {
+            margin-top: 16px
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--navy), var(--blue));
+            color: var(--white);
+            font-size: .75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0
+        }
+
+        .step-header h2 {
+            font-size: .82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            color: var(--navy)
+        }
+
+        /* Tables */
+        .proto-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .8rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            overflow: hidden
+        }
+
+        .proto-table th {
+            background: var(--blue-pale);
+            color: var(--navy);
+            font-weight: 600;
+            padding: 8px 12px;
+            text-align: left;
+            font-size: .75rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            border-bottom: 1.5px solid var(--gray-200)
+        }
+
+        .proto-table td {
+            padding: 6px 12px;
+            border-bottom: 1px solid var(--gray-200);
+            vertical-align: middle
+        }
+
+        .proto-table tr:last-child td {
+            border-bottom: none
+        }
+
+        .proto-table tr:hover {
+            background: var(--blue-pale)
+        }
+
+        .proto-table input[type="text"],
+        .proto-table input[type="number"],
+        .proto-table input[type="time"] {
+            height: 30px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 6px;
+            padding: 0 8px;
+            font-family: inherit;
+            font-size: .82rem;
+            color: var(--navy);
+            background: var(--gray-50);
+            outline: none;
+            transition: border-color var(--transition), box-shadow var(--transition)
+        }
+
+        .proto-table input:focus {
+            border-color: var(--blue-light);
+            background: var(--white);
+            box-shadow: 0 0 0 2px rgba(91, 155, 213, .12)
+        }
+
+        .proto-table select {
+            height: 30px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 6px;
+            padding: 0 8px;
+            font-family: inherit;
+            font-size: .82rem;
+            color: var(--navy);
+            background: var(--gray-50);
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%237A8A9E' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+            padding-right: 22px
+        }
+
+        .proto-table select:focus {
+            border-color: var(--blue-light);
+            box-shadow: 0 0 0 2px rgba(91, 155, 213, .12)
+        }
+
+        .inp-detail {
+            width: 100%
+        }
+
+        .inp-val {
+            width: 80px;
+            text-align: center
+        }
+
+        .inp-hora {
+            width: 90px
+        }
+
+        /* Toggle SI/NO */
+        .toggle-sino {
+            display: flex;
+            gap: 2px;
+            background: var(--gray-100);
+            border-radius: 6px;
+            padding: 2px;
+            height: 28px
+        }
+
+        .toggle-sino button {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: .72rem;
+            font-weight: 600;
+            padding: 0 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: all var(--transition)
+        }
+
+        .toggle-sino button.active-si {
+            background: var(--green);
+            color: var(--white)
+        }
+
+        .toggle-sino button.active-no {
+            background: var(--gray-300);
+            color: var(--gray-700)
+        }
+
+        /* Measures section */
+        .measure-header {
+            background: linear-gradient(135deg, var(--navy-mid), var(--blue));
+            color: var(--white);
+            padding: 10px 16px;
+            font-size: .78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .05em;
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .measure-header svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--white)
+        }
+
+        .measure-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .8rem;
+            border: 1px solid var(--gray-200);
+            border-top: none;
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            overflow: hidden
+        }
+
+        .measure-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--gray-200);
+            vertical-align: middle
+        }
+
+        .measure-table tr:last-child td {
+            border-bottom: none
+        }
+
+        .measure-table tr:hover {
+            background: var(--blue-pale)
+        }
+
+        .measure-num {
+            font-weight: 700;
+            color: var(--blue);
+            width: 36px;
+            text-align: center
+        }
+
+        .measure-desc {
+            color: var(--gray-700);
+            font-weight: 500
+        }
+
+        .measure-desc .detail {
+            font-weight: 400;
+            color: var(--gray-500);
+            font-size: .75rem
+        }
+
+        .measure-action {
+            font-weight: 600;
+            color: var(--navy);
+            font-size: .78rem
+        }
+
+        /* Check done */
+        .check-done {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none
+        }
+
+        .check-done .cb {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--gray-300);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all var(--transition);
+            background: var(--white)
+        }
+
+        .check-done.checked .cb {
+            background: linear-gradient(135deg, var(--green), #10B981);
+            border-color: var(--green)
+        }
+
+        .check-done .cb svg {
+            width: 13px;
+            height: 13px;
+            fill: none;
+            stroke: white;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0;
+            transform: scale(.5);
+            transition: all var(--transition)
+        }
+
+        .check-done.checked .cb svg {
+            opacity: 1;
+            transform: scale(1)
+        }
+
+        .check-done input[type="checkbox"] {
+            display: none
+        }
+
+        /* Alert box */
+        .alert-box {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            font-size: .82rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .alert-box.criteria-yes {
+            background: var(--red-pale);
+            border: 1.5px solid var(--red-border);
+            color: var(--red)
+        }
+
+        .alert-box.criteria-no {
+            background: var(--green-pale);
+            border: 1.5px solid var(--green-border);
+            color: var(--green)
+        }
+
+        .alert-box svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            flex-shrink: 0
+        }
+
+        .qsofa-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--red);
+            color: var(--white);
+            font-size: .85rem;
+            font-weight: 700;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 8px
+        }
+
+        /* Re-evaluation grid */
+        .reeval-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px
+        }
+
+        .reeval-col {
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            overflow: hidden
+        }
+
+        .reeval-col-header {
+            background: var(--blue-pale);
+            padding: 8px 12px;
+            font-size: .75rem;
+            font-weight: 700;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .reeval-col-header input {
+            width: 90px
+        }
+
+        .reeval-col table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .78rem
+        }
+
+        .reeval-col td {
+            padding: 5px 10px;
+            border-bottom: 1px solid var(--gray-200)
+        }
+
+        .reeval-col td:first-child {
+            font-weight: 500;
+            color: var(--gray-700);
+            width: 55%
+        }
+
+        .reeval-col td:last-child {
+            width: 45%
+        }
+
+        .reeval-col tr:last-child td {
+            border-bottom: none
+        }
+
+        .reeval-col input {
+            width: 100%;
+            height: 28px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 5px;
+            padding: 0 6px;
+            font-family: inherit;
+            font-size: .8rem;
+            color: var(--navy);
+            background: var(--gray-50);
+            outline: none;
+            text-align: center
+        }
+
+        .reeval-col input:focus {
+            border-color: var(--blue-light);
+            background: var(--white)
+        }
+
+        /* Two-col layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid var(--gray-200);
+            padding: 14px 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--gray-50)
+        }
+
+        .footer-info {
+            font-size: .75rem;
+            color: var(--gray-500)
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 10px
+        }
+
+        .btn {
+            height: 38px;
+            padding: 0 24px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: .82rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition);
+            border: none;
+            outline: none
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--gray-700);
+            border: 1.5px solid var(--gray-200)
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gray-300);
+            background: var(--gray-100)
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+            color: var(--white);
+            box-shadow: 0 2px 8px rgba(11, 37, 69, .2)
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px rgba(11, 37, 69, .3);
+            transform: translateY(-1px)
+        }
+
+        .btn-primary:active {
+            transform: translateY(0)
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor
+        }
+
+        @media(max-width:900px) {
+            body {
+                padding: 12px
+            }
+
+            .tablet {
+                border-radius: 18px
+            }
+
+            .content {
+                padding: 0 16px 16px
+            }
+
+            .two-col,
+            .reeval-grid {
+                grid-template-columns: 1fr
+            }
+
+            .patient-bar {
+                padding: 12px 16px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tablet">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M19 3v2h-1.2l-3.17 11.11A2.99 2.99 0 0112 19c-1.66 0-3-1.34-3-3 0-1.3.84-2.4 2-2.82V3H19zM15.27 5H13v7.49c.63.31 1.14.82 1.45 1.45L15.27 5zM12 15c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zM7 2v2H5v2h2v2H5v2h2v3.17c-1.16.42-2 1.52-2 2.83 0 1.66 1.34 3 3 3s3-1.34 3-3c0-1.3-.84-2.4-2-2.82V2H7zm1 14c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" />
+                    </svg>
+                </div>
+                <h1>Protocolo Sepsis<span>Departamento de Urgencias</span></h1>
+            </div>
+            <div class="header-right">
+                <span class="header-date" id="currentDate"></span>
+                <div class="status-dot"></div>
+            </div>
+        </div>
+
+        <div class="subtitle-bar">Este protocolo es de aplicación a cualquier paciente con posible infección grave</div>
+
+        <!-- Patient Info -->
+        <div class="patient-bar">
+            <div class="field-group"><label>ID PT:</label><input type="text" class="inp-id" id="patientId"
+                    placeholder="Ej: PT+A4:B40E"></div>
+            <div class="field-group"><label>Nombre:</label><input type="text" class="inp-name" id="patientName"
+                    placeholder="Nombre completo"></div>
+            <div class="field-group"><label>Edad:</label><input type="number" class="inp-sm" id="edad" placeholder="–">
+            </div>
+            <div class="field-group"><label>Sexo:</label>
+                <select id="sexo">
+                    <option value="" selected disabled>–</option>
+                    <option>Hombre</option>
+                    <option>Mujer</option>
+                </select>
+            </div>
+            <div class="field-group"><label>Peso (Kg):</label><input type="number" class="inp-sm" id="peso"
+                    placeholder="–"></div>
+            <div class="field-group"><label>Fecha:</label><input type="date" class="inp-date" id="fecha"></div>
+            <div class="field-group"><label>Hora:</label><input type="time" class="inp-time" id="horaIngreso"></div>
+        </div>
+
+        <div class="content">
+            <!-- 1º TOMAR CONSTANTES -->
+            <div class="step-section">
+                <div class="step-header">
+                    <div class="step-number">1º</div>
+                    <h2>Tomar Constantes</h2>
+                    <div class="field-group" style="margin-left:16px"><label>Hora (hh:mm):</label><input type="time"
+                            class="inp-hora" id="horaConstantes"></div>
+                </div>
+            </div>
+
+            <!-- 2º VALORAR SÍNTOMAS FOCALES -->
+            <div class="step-section">
+                <div class="step-header">
+                    <div class="step-number">2º</div>
+                    <h2>Valorar Síntomas Focales</h2>
+                </div>
+                <table class="proto-table">
+                    <thead>
+                        <tr>
+                            <th style="width:180px">Síntoma</th>
+                            <th style="width:100px">¿Presentes?</th>
+                            <th>Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Respiratorios</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="text" class="inp-detail" placeholder="Ej: Tos y disnea de reposo"></td>
+                        </tr>
+                        <tr>
+                            <td>Abdominales</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="text" class="inp-detail" placeholder="Detalle…"></td>
+                        </tr>
+                        <tr>
+                            <td>Urinarios</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="text" class="inp-detail" placeholder="Detalle…"></td>
+                        </tr>
+                        <tr>
+                            <td>SNC</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="text" class="inp-detail" placeholder="Detalle…"></td>
+                        </tr>
+                        <tr>
+                            <td>Piel-TB</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="text" class="inp-detail" placeholder="Detalle…"></td>
+                        </tr>
+                        <tr>
+                            <td>Catéter</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="text" class="inp-detail" placeholder="Ej: Port-a-Cath"></td>
+                        </tr>
+                        <tr>
+                            <td>Otros</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="text" class="inp-detail" placeholder="Detalle…"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 3º VALORAR DISFUNCIÓN ORGÁNICA -->
+            <div class="step-section">
+                <div class="step-header">
+                    <div class="step-number">3º</div>
+                    <h2>Valorar Disfunción Orgánica</h2>
+                </div>
+                <table class="proto-table">
+                    <thead>
+                        <tr>
+                            <th style="width:180px">Disfunción</th>
+                            <th style="width:100px">¿Presente?</th>
+                            <th style="width:100px">Hora</th>
+                            <th>Signos o Síntomas Asociados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Encefalopatía</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="time" class="inp-hora"></td>
+                            <td><input type="text" class="inp-detail" placeholder="Somnolencia, confusión…"></td>
+                        </tr>
+                        <tr>
+                            <td>Trombopenia</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="time" class="inp-hora"></td>
+                            <td><input type="text" class="inp-detail" placeholder="<20.000 PLAQ"></td>
+                        </tr>
+                        <tr>
+                            <td>Ins. Renal</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="time" class="inp-hora"></td>
+                            <td><input type="text" class="inp-detail"
+                                    placeholder="Oliguria<0,5 mL/Kg/hora; Cr<1,8 mg/dL"></td>
+                        </tr>
+                        <tr>
+                            <td>Ins. Circulatoria</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="time" class="inp-hora"></td>
+                            <td><input type="text" class="inp-detail"
+                                    placeholder="TAS<90mmHg; TAM<65mmHg; hipoperfusión"></td>
+                        </tr>
+                        <tr>
+                            <td>Ins. Respiratoria</td>
+                            <td>
+                                <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                        onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                            </td>
+                            <td><input type="time" class="inp-hora"></td>
+                            <td><input type="text" class="inp-detail"
+                                    placeholder="Disnea, taquipnea, Sat O2<90%; pO2<70mmHg"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 4º REGISTRAR CTES. Y PARÁMETROS -->
+            <div class="step-section">
+                <div class="step-header">
+                    <div class="step-number">4º</div>
+                    <h2>Registrar Constantes y Parámetros</h2>
+                </div>
+                <div style="overflow-x:auto">
+                    <table class="proto-table" id="paramsTable">
+                        <thead>
+                            <tr>
+                                <th style="width:200px">Parámetro</th>
+                                <th style="width:120px">Valor 1</th>
+                                <th style="width:120px">Valor 2</th>
+                                <th style="width:120px">Valor 3</th>
+                                <th style="width:120px">Valor 4</th>
+                                <th style="width:120px">Valor 5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="hora-row" style="background:var(--blue-pale)">
+                                <td style="font-weight:700;color:var(--navy)">Hora (hh:mm)</td>
+                                <td><input type="time" class="inp-hora"></td>
+                                <td><input type="time" class="inp-hora"></td>
+                                <td><input type="time" class="inp-hora"></td>
+                                <td><input type="time" class="inp-hora"></td>
+                                <td><input type="time" class="inp-hora"></td>
+                            </tr>
+                            <tr>
+                                <td>Temperatura (ºC)</td>
+                                <td><input type="number" class="inp-val" step="0.1" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.1" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.1" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.1" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.1" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>FC (lpm)</td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>F. Resp. (rpm)</td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>T.A.S (mmHg)</td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>T.A.D (mmHg)</td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>T.A.M</td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>SAT O₂ (%)</td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Glasgow (GCS 3-15)</td>
+                                <td><input type="number" class="inp-val" min="3" max="15" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" min="3" max="15" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" min="3" max="15" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" min="3" max="15" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" min="3" max="15" placeholder="–"></td>
+                            </tr>
+                            <tr style="border-top:2px solid var(--gray-300)">
+                                <td>Leucocitos</td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Plaquetas</td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Creatinina (mg/dL)</td>
+                                <td><input type="number" class="inp-val" step="0.01" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.01" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.01" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.01" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.01" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>PCR (mg/dL)</td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Lactato (mmol/L)</td>
+                                <td><input type="number" class="inp-val" step="0.1" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.1" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.1" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.1" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.1" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>pH</td>
+                                <td><input type="number" class="inp-val" step="0.01" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.01" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.01" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.01" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" step="0.01" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>PO₂ (mmHg)</td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                                <td><input type="number" class="inp-val" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Hipoperfusión</td>
+                                <td>
+                                    <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                            onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                                </td>
+                                <td>
+                                    <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                            onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                                </td>
+                                <td>
+                                    <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                            onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                                </td>
+                                <td>
+                                    <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                            onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                                </td>
+                                <td>
+                                    <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                            onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Oliguria</td>
+                                <td>
+                                    <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                            onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                                </td>
+                                <td>
+                                    <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                            onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                                </td>
+                                <td>
+                                    <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                            onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                                </td>
+                                <td>
+                                    <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                            onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                                </td>
+                                <td>
+                                    <div class="toggle-sino"><button onclick="toggleSiNo(this,'si')">SÍ</button><button
+                                            onclick="toggleSiNo(this,'no')" class="active-no">NO</button></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5º CRITERIOS -->
+            <div class="step-section">
+                <div class="step-header">
+                    <div class="step-number">5º</div>
+                    <h2>¿Cumple dos o más criterios?</h2>
+                </div>
+                <div class="two-col">
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <div class="toggle-sino" style="height:34px">
+                            <button onclick="toggleSiNo(this,'si')" style="padding:0 16px;font-size:.82rem"
+                                id="criteriosSi">SÍ</button>
+                            <button onclick="toggleSiNo(this,'no')" class="active-no"
+                                style="padding:0 16px;font-size:.82rem" id="criteriosNo">NO</button>
+                        </div>
+                        <span style="font-size:.82rem;font-weight:600;color:var(--navy)">Hay criterios de sepsis</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <label style="font-size:.82rem;font-weight:600;color:var(--navy)">qSOFA:</label>
+                        <input type="number" min="0" max="3"
+                            style="width:60px;height:34px;border:1.5px solid var(--gray-200);border-radius:6px;text-align:center;font-family:inherit;font-size:1rem;font-weight:700;color:var(--navy);outline:none"
+                            id="qsofa" placeholder="–">
+                    </div>
+                </div>
+                <div class="alert-box criteria-no" id="criteriaAlert" style="margin-top:10px">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                    </svg>
+                    <span id="criteriaText">Inicie el tratamiento lo antes posible según el siguiente protocolo</span>
+                </div>
+            </div>
+
+            <!-- MEDIDAS INICIALES -->
+            <div class="measure-header">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z" />
+                </svg>
+                Medidas Asistenciales y Terapéuticas Iniciales
+            </div>
+            <table class="measure-table">
+                <tr>
+                    <td class="measure-num">6º</td>
+                    <td class="measure-desc">Acostar en cama y mantener vigilado</td>
+                    <td style="width:80px"><label class="check-done" onclick="toggleDone(this)"><input type="checkbox">
+                            <div class="cb"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                        </label></td>
+                    <td style="width:100px"><input type="time" class="inp-hora"></td>
+                </tr>
+                <tr>
+                    <td class="measure-num">7º</td>
+                    <td class="measure-desc">Coger vía venosa con catéter grueso (G14/G16)</td>
+                    <td><label class="check-done" onclick="toggleDone(this)"><input type="checkbox">
+                            <div class="cb"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                        </label></td>
+                    <td><input type="time" class="inp-hora"></td>
+                </tr>
+                <tr>
+                    <td class="measure-num">8º</td>
+                    <td class="measure-desc">Extraer analítica <span class="detail">(3 tubos: HG, BQ, COAG.)</span></td>
+                    <td><label class="check-done" onclick="toggleDone(this)"><input type="checkbox">
+                            <div class="cb"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                        </label></td>
+                    <td><input type="time" class="inp-hora"></td>
+                </tr>
+                <tr>
+                    <td class="measure-num">9º</td>
+                    <td class="measure-desc">Extraer gasometría <span class="detail">(Art. o venosa según
+                            contexto)</span> y lactato</td>
+                    <td><label class="check-done" onclick="toggleDone(this)"><input type="checkbox">
+                            <div class="cb"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                        </label></td>
+                    <td><input type="time" class="inp-hora"></td>
+                </tr>
+                <tr>
+                    <td class="measure-num">10º</td>
+                    <td class="measure-desc">Extraer hemocultivos y urocultivo</td>
+                    <td><label class="check-done" onclick="toggleDone(this)"><input type="checkbox">
+                            <div class="cb"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                        </label></td>
+                    <td><input type="time" class="inp-hora"></td>
+                </tr>
+                <tr>
+                    <td class="measure-num">11º</td>
+                    <td class="measure-desc">Canalizar segunda vía G14</td>
+                    <td><label class="check-done" onclick="toggleDone(this)"><input type="checkbox">
+                            <div class="cb"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                        </label></td>
+                    <td><input type="time" class="inp-hora"></td>
+                </tr>
+            </table>
+
+            <!-- MEDIDAS SECUENCIALES -->
+            <div class="measure-header" style="margin-top:12px">
+                <svg viewBox="0 0 24 24">
+                    <path d="M7 2v11h3v9l7-12h-4l4-8z" />
+                </svg>
+                Medidas Asistenciales y Terapéuticas Secuenciales
+            </div>
+            <table class="measure-table">
+                <tr>
+                    <td class="measure-num">12º</td>
+                    <td class="measure-desc">Administrar antibiótico IV empírico según foco <span class="detail">(ver
+                            tabla)</span></td>
+                    <td style="width:80px"><label class="check-done" onclick="toggleDone(this)"><input type="checkbox">
+                            <div class="cb"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                        </label></td>
+                    <td style="width:100px"><input type="time" class="inp-hora"></td>
+                </tr>
+                <tr>
+                    <td class="measure-num">13º</td>
+                    <td class="measure-desc">Si TAS&lt;90 o TAM&lt;65 mmHg o Lactato &gt;3 mg/dL: <span
+                            class="measure-action">Cristaloides IV 30 mL/Kg/hora</span></td>
+                    <td><label class="check-done" onclick="toggleDone(this)"><input type="checkbox">
+                            <div class="cb"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                        </label></td>
+                    <td><input type="time" class="inp-hora"></td>
+                </tr>
+                <tr>
+                    <td class="measure-num">14º</td>
+                    <td class="measure-desc">Si SAT O₂ &lt;93% o PO₂&lt;70 mmHg: <span class="measure-action">O₂ por
+                            mascarilla 32-40%</span></td>
+                    <td><label class="check-done" onclick="toggleDone(this)"><input type="checkbox">
+                            <div class="cb"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                        </label></td>
+                    <td><input type="time" class="inp-hora"></td>
+                </tr>
+                <tr>
+                    <td class="measure-num">15º</td>
+                    <td class="measure-desc">Monitorizar TA, FC, SAT O₂ y diuresis. <span class="measure-action">Sonda
+                            vesical</span></td>
+                    <td><label class="check-done" onclick="toggleDone(this)"><input type="checkbox">
+                            <div class="cb"><svg viewBox="0 0 24 24">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg></div>
+                        </label></td>
+                    <td><input type="time" class="inp-hora"></td>
+                </tr>
+            </table>
+
+            <!-- RE-EVALUAR -->
+            <div class="step-section" style="margin-top:16px">
+                <div class="step-header">
+                    <div class="step-number" style="width:auto;padding:0 12px;border-radius:14px">RE</div>
+                    <h2>Re-evaluar en 1, 2 y 4 horas</h2>
+                </div>
+                <div class="reeval-grid">
+                    <div class="reeval-col">
+                        <div class="reeval-col-header"><span>1 Hora</span><input type="time" class="inp-hora"
+                                style="height:26px;font-size:.78rem"></div>
+                        <table>
+                            <tr>
+                                <td>FC (lpm)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>FR (rpm)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>TAS (mmHg)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>TAM (mmHg)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Lactato (mmol/L)</td>
+                                <td><input type="number" step="0.1" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Diuresis (mL)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="reeval-col">
+                        <div class="reeval-col-header"><span>2 Horas</span><input type="time" class="inp-hora"
+                                style="height:26px;font-size:.78rem"></div>
+                        <table>
+                            <tr>
+                                <td>FC (lpm)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>FR (rpm)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>TAS (mmHg)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>TAM (mmHg)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Lactato (mmol/L)</td>
+                                <td><input type="number" step="0.1" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Diuresis (mL)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="reeval-col">
+                        <div class="reeval-col-header"><span>4 Horas</span><input type="time" class="inp-hora"
+                                style="height:26px;font-size:.78rem"></div>
+                        <table>
+                            <tr>
+                                <td>FC (lpm)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>FR (rpm)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>TAS (mmHg)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>TAM (mmHg)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Lactato (mmol/L)</td>
+                                <td><input type="number" step="0.1" placeholder="–"></td>
+                            </tr>
+                            <tr>
+                                <td>Diuresis (mL)</td>
+                                <td><input type="number" placeholder="–"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <span class="footer-info">Protocolo de manejo del paciente con sospecha de sepsis – Departamento de
+                Urgencias</span>
+            <div class="footer-actions">
+                <a href="index.html" class="btn btn-secondary" style="text-decoration:none;">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                    </svg>
+                    Ir a Riesgo Vital
+                </a>
+                <button class="btn btn-secondary" onclick="clearAll()">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" />
+                    </svg>
+                    Limpiar
+                </button>
+                <button class="btn btn-primary" onclick="saveProtocol()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                    </svg>
+                    Guardar Protocolo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        document.getElementById('fecha').valueAsDate = new Date();
+
+        // Toggle SI/NO
+        function toggleSiNo(btn, type) {
+            const group = btn.parentElement;
+            group.querySelectorAll('button').forEach(b => b.className = '');
+            btn.className = type === 'si' ? 'active-si' : 'active-no';
+        }
+
+        // Toggle done checkbox
+        function toggleDone(label) {
+            const cb = label.querySelector('input[type="checkbox"]');
+            setTimeout(() => { label.classList.toggle('checked', cb.checked); }, 0);
+        }
+
+        // Clear all
+        function clearAll() {
+            document.querySelectorAll('input[type="text"],input[type="number"],input[type="time"]').forEach(i => i.value = '');
+            document.querySelectorAll('input[type="date"]').forEach(i => i.valueAsDate = new Date());
+            document.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
+            document.querySelectorAll('.toggle-sino').forEach(g => {
+                g.querySelectorAll('button').forEach(b => b.className = '');
+                g.querySelector('button:last-child').className = 'active-no';
+            });
+            document.querySelectorAll('.check-done').forEach(l => { l.classList.remove('checked'); l.querySelector('input').checked = false; });
+            document.getElementById('qsofa').value = '';
+        }
+
+        // Save
+        function saveProtocol() {
+            const pid = document.getElementById('patientId').value.trim();
+            if (!pid) {
+                const el = document.getElementById('patientId');
+                el.focus(); el.style.borderColor = '#EF4444';
+                setTimeout(() => el.style.borderColor = '', 2000);
+                return;
+            }
+            const btn = document.querySelector('.btn-primary');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> ¡Guardado!';
+            btn.style.background = 'linear-gradient(135deg, #059669, #10B981)';
+            setTimeout(() => { btn.innerHTML = orig; btn.style.background = ''; }, 2000);
+            console.log('Protocolo guardado para paciente:', pid);
+        }
+    </script>
+</body>
+
+</html>
